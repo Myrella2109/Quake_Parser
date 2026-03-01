@@ -4,7 +4,7 @@ from models.game import Game
 class LogParser:
     def __init__(self,file_path):
         self.file_path = file_path
-        self.game =[]
+        self.games =[]
     
     def parse(self):
         current_game = None
