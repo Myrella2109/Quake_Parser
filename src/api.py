@@ -1,48 +1,67 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
-
-from src.get_game_by_id import GetGameById
+from src.get_game_by_id import GetGameById, get_all_games
 from src.get_ranking import GetRanking
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
 
-app = FastAPI(
-    title="Quake Parser API",
-    description="API para consulta de jogos e ranking do Quake",
-    version="1.0.0"
-)
+    print("\n=========== RESUMO DO SISTEMA ===========")
 
+    games = get_all_games()
+
+    total_games = len(games)
+    total_kills_global = sum(game["total_kills"] for game in games.values())
+
+    print(f"Total de jogos processados: {total_games}")
+    print(f"Total global de kills: {total_kills_global}")
+
+    ranking = GetRanking().execute()
+
+    print("\n--- Ranking Global ---")
+
+    for position, (player, kills) in enumerate(ranking.items(), start=1):
+        print(f"{position}. {player} - {kills} kills")
+
+    print("==========================================\n")
+
+    yield
+
+
+# 👇 ESSA LINHA É OBRIGATÓRIA
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
-def read_root():
-    """
-    Rota principal apenas para verificar
-    se a API está funcionando.
-    """
-    return {"message": "API Quake Parser está funcionando 🚀"}
+def root():
+   
+    games = get_all_games()
 
+    total_games = len(games)
+    total_kills_global = sum(game["total_kills"] for game in games.values())
+
+    ranking = GetRanking().execute()
+
+    return {
+        "total_games": total_games,
+        "total_kills_global": total_kills_global,
+        "ranking_global": ranking
+    }
 
 
 @app.get("/games/{game_id}")
 def get_game(game_id: int):
-    """
-    Retorna um jogo específico pelo ID.
-    """
-
-    game = GetGameById(game_id)
+    use_case = GetGameById()
+    game = use_case.execute(game_id)
 
     if not game:
-        raise HTTPException(status_code=404, detail="Game não encontrado")
+        return {"detail": "Game não encontrado"}
 
     return game
 
 
-
 @app.get("/ranking")
 def ranking():
-    """
-    Retorna o ranking global de jogadores.
-    """
-
-    return GetRanking()
+    return GetRanking().execute()

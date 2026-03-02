@@ -23,7 +23,7 @@ def main():
             "kills": game.kills
         }
 
-    with open("report.json", "w", encoding="utf-8") as file:
+    with open("data/report.json", "w", encoding="utf-8") as file:
         json.dump(report, file, indent=4)
 
    

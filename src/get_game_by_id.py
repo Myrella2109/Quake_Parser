@@ -1,13 +1,19 @@
+import json
+
+
+def get_all_games():
+    """
+    Lê o arquivo report.json e retorna todos os jogos.
+    """
+    with open("data/report.json", "r", encoding="utf-8") as file:
+        return json.load(file)
+
+
 class GetGameById:
     """
     Caso de uso para buscar jogo por ID.
     """
 
-    def __init__(self, games):
-        self.games = games
-
     def execute(self, game_id: int):
-        for game in self.games:
-            if game.game_id == game_id:
-                return game.to_dict()
-        return None
+        games = get_all_games()
+        return games.get(str(game_id))
