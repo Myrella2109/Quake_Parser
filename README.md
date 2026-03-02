@@ -2,7 +2,7 @@ Este projeto tem como objetivo realizar a analise de um arquivo games.log gerado
 
 A aplicação foi criada para identificar cada partida iniciada no arquivo de log, computar o número total de mortes, listar os jogadores presentes e registrar quantas eliminações cada um realizou. Adicionalmente, ela cria uma classificação geral com a soma das mortes de todos os jogos analisados. Segundo as regras do jogo, quando o "world" elimina um jogador, sua pontuação diminui.
 
-Para rodar o projeto, o primeiro passo é instalar as dependências utilizando o comando pip install fastapi uvicorn. Depois, execute o arquivo main.py para processar o log e criar um relatório completo no arquivo data/report.json. Após isso, a API pode ser iniciada com o comando uvicorn src.api:app --reload.
+Para rodar o projeto, o primeiro passo é instalar o ambiente virtual utilizando o comando (python -m venv .venv), em seguida ativá-lo usando (.venv\Scripts\activate) caso estaja usando Windows ou (source .venv/bin/activate) caso esteja usando Linux/macOS. O segundo passo é instalar as dependências utilizando o comando pip install fastapi uvicorn. Depois, execute o arquivo main.py para processar o log e criar um relatório completo no arquivo data/report.json. Após isso, a API pode ser iniciada com o comando uvicorn src.api:app --reload.
 
 A aplicação estará acessível em http://127.0.0.1:8000, e a documentação interativa automática pode ser encontrada em http://127.0.0.1:8000/docs.
 
